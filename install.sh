@@ -12,8 +12,13 @@ OMZ_DIR="$HOME/.oh-my-zsh"
 # 1. Detect OS and Install System Packages
 if [ -f /etc/debian_version ]; then
     echo "📦 Debian/Ubuntu detected. Installing dependencies via apt..."
+    sudo mkdir -p /etc/apt/keyrings
+    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+    sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+    # 2. 패키지 업데이트 및 설치
     sudo apt update
-    sudo apt install -y zsh curl git tmux htop bat zoxide
+    sudo apt install -y eza zsh curl git tmux htop bat zoxide
     
     # Setup bat symlink if batcat is installed
     if command -v batcat >/dev/null 2>&1 && [ ! -f "$HOME/.local/bin/bat" ]; then
